@@ -1,14 +1,10 @@
+/*Testing the precision limit in C*/
+
 #include <stdio.h>
 
 int main(){
     float i;
     float a;
-
-    for (i = 0; i <10; ++i){
-        a+=0.000001;
-        printf("%f\n", a);
-    }
-
 
     /* printf("\n\nRound 1 \n");
     for (i = 0.0; i < 10.0; i+=1.0){
