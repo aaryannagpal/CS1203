@@ -7,26 +7,13 @@ struct node {
 	struct node* link;
 };
 
-void add_nodes(struct node** head, int data)
+void add_nodes(struct node** head, int new_data)
 {
-    struct node* block = (struct node*)malloc(sizeof(struct node));
-    
-	block->data = data;
-	block->link = NULL;
-	if (*head == NULL) {
-		*head = block;
-	}
-	else {
-		struct node* temp = *head;
-
-		// finding last node
-		while (temp->link != NULL) {
-			temp = temp->link;
-		}
-
-		// adding node at last position
-		temp->link = block;
-	}
+	struct node* new
+		= (struct node*)malloc(sizeof(struct node));
+	new->data = new_data;
+	new->link = (*head);
+	(*head) = new;
 }
 
 struct node* end(struct node* head)
