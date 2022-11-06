@@ -8,6 +8,18 @@ struct node
     struct node *link; //only one link for the next node
 };
 
+void print_data(struct node *head){
+    if (head == NULL){
+        printf("The list is empty");
+    }
+    struct node *pointer = NULL;
+    pointer = head;
+    while (pointer != NULL){
+        printf("%d\n",pointer->data);
+        pointer = pointer->link;
+    }
+}
+
 int main(){
     //creating the first node
     struct node *head = NULL; //initializing
@@ -22,7 +34,7 @@ int main(){
         new->link = NULL;
         head->link = new;
         head = new;
-        printf("%d\n",new->data);
+        //printf("%d\n",new->data);
     }
     return 0;
 }
