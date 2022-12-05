@@ -1,53 +1,58 @@
-#include <stdio.h>
-#include <stdlib.h>
+//program to make Binary Search Tree
 
-struct node {
-	int value;
-	struct node *left, *right;
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *left;
+    struct node *right;
 };
 
-typedef struct node * NodeAddress;
+typedef struct node * Node;
 
+Node root = NULL; //defining here else will have to update in every function
 
-NodeAddress new(int val)
+Node newNode(int data)
 {
-	NodeAddress temp = (NodeAddress)malloc(sizeof(struct node));
-	temp->value = val;
-	temp->left = temp->right = NULL;
-	return temp;
+    Node temp = (Node)malloc(sizeof(struct node));
+    temp->data = data;
+    temp->left = NULL;
+    temp->right = NULL;
+    return temp;
 }
 
-void PrintOrder(NodeAddress root)
+Node insert (Node root, int data)
 {
-	if (root != NULL) {
-        PrintOrder(root->right);
-        printf("%d \n", root->value);
-		PrintOrder(root->left);
-	}
+    if (root == NULL)
+        return newNode(data);
+    if (data < root->data)
+        root->left = insert(root->left, data);
+    else if (data > root->data)
+        root->right = insert(root->right, data);
+    return root;
 }
 
-
-NodeAddress insert(NodeAddress node, int key)
+void inorder(Node root)
 {
-	if (node == NULL)
-		return new(key);
-
-	if (key > node->value)
-		node->left = insert(node->left, key);
-	else if (key < node->value)
-		node->right = insert(node->right, key);
-
-	return node;
+    if (root != NULL)
+    {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
 }
 
-NodeAddress arrayToReverseBST(int *a, int n) {
-    NodeAddress root = NULL;
+Node arrayToBST(int *a, int n) {
+    Node root = NULL;
     for(int i=0; i<n; i++) {
         root = insert(root, *a);
         a++;
     }
     return root;
 }
+
 int main(){
     printf("Enter the number of elements in the array: \n");
     int n;
@@ -61,5 +66,5 @@ int main(){
     }
     
     printf("\nThe elements of the BST are: \n");
-    PrintOrder(arrayToReverseBST(arr, n));
+    inorder(arrayToBST(arr, n));
 }
