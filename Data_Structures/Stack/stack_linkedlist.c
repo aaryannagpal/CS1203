@@ -4,9 +4,11 @@
 struct Node{
     int data;
     struct Node *next;
-}*top = NULL; //inefficient if using more than one stacks
+};//*top = NULL; //inefficient if using more than one stacks
 
 //Alternative: declare globally and all functions must have stack as parameter
+
+struct Node *top = NULL;
 
 void push(int x){
     struct Node *t;

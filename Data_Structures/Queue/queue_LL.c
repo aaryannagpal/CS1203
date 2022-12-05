@@ -4,7 +4,10 @@
 struct Node{
     int data;
     struct Node *next;
-}*start = NULL, *end = NULL;
+};
+
+struct Node *start = NULL;
+struct Node *end = NULL;
 
 typedef struct Node N;
 
