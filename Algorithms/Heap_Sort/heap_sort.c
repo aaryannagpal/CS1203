@@ -1,5 +1,3 @@
-//make heap sort algorithm
-
 #include <stdio.h>
 #include <stdlib.h>
 
