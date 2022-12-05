@@ -11,7 +11,7 @@ struct Node *end = NULL;
 
 typedef struct Node N;
 
-void push(int x){
+void enqueue(int x){
     N *t;
     t=(N *)malloc(sizeof(N));
     if(t==NULL)
@@ -28,7 +28,7 @@ void push(int x){
     }
 }
 
-int pop(){
+int dequeue(){
     int x=-1;
     N *t;
     if(start==NULL)
@@ -53,17 +53,17 @@ void show(){
 }
 
 int main(){
-    push(14);
-    push(55);
-    push(6);
-    push(12);
-    push(53);
+    enqueue(14);
+    enqueue(55);
+    enqueue(6);
+    enqueue(12);
+    enqueue(53);
     //push(0);
 
     show();
 
-    pop();
-    pop();
+    dequeue();
+    dequeue();
 
     show();
 

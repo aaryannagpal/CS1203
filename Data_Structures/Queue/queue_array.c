@@ -17,7 +17,7 @@ void initialize(Q *q, int size){
     q->A = (int *)malloc(q->size * sizeof(int));
 }
 
-void push(Q *q, int x){
+void enqueue(Q *q, int x){
     if(q->end == q->size-1)
         printf("\n**Queue is full, elements not added**\n");
     else{
@@ -26,7 +26,7 @@ void push(Q *q, int x){
     }
 }
 
-int pop(Q *q){
+int dequeue(Q *q){
     int x = -1;
     if(q->start == q->end)
         printf("Queue is empty\n");
@@ -47,17 +47,17 @@ void show(Q q){
 int main(){
     Q q;
     initialize(&q, 5);
-    push(&q, 14);
-    push(&q, 55);
-    push(&q, 6);
-    push(&q, 12);
-    push(&q, 53);
+    enqueue(&q, 14);
+    enqueue(&q, 55);
+    enqueue(&q, 6);
+    enqueue(&q, 12);
+    enqueue(&q, 53);
     //push(&q, 0);
 
     show(q);
 
-    pop(&q);
-    pop(&q);
+    dequeue(&q);
+    dequeue(&q);
     show(q);
 
     return 0;
