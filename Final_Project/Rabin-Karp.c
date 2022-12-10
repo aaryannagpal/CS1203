@@ -21,6 +21,7 @@ int search(char* text, char* pattern){
 
     //Iterate through the main text and compare the hash values of the pattern and the substrings of the same length as the pattern
     for(int i=0; i<=textLen-patLen; i++){
+        
         //Calculate the hash value of the current substring of the main text
         int subHash = calculateHash(text+i, patLen);
 
