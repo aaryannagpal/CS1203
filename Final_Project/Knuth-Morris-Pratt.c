@@ -56,8 +56,7 @@ int main()
 {
     char text[] = "AARYAN IS AARYAN";
     char pattern[] = "AARYAN";
-
     KMP(text, pattern);
-
+    
     return 0;
 }
