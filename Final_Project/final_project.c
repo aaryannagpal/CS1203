@@ -3,8 +3,6 @@
 #include <string.h>
 
 #define WORDSIZE 15
-#define GREEN "\033[32m" // define green color code
-#define RESET "\033[0m" // define reset color code
 
 char *reverse_string(char a[]){
     int size = strlen(a);
@@ -33,19 +31,21 @@ char *upper_string(char a[]){
     return b;
 }       
 
-// char *upper_string(char a[]){
-//     int size = strlen(a);
-//     for (int i = 0; i < size; i++){
-//         a[i] = upper(a[i]);
-//     }
-//     return a;
-// }
-
-//check if a substring in a string
-
 int inString_Brute(char *a, char *b){
     int size = strlen(a);
     int size2 = strlen(b);
+    // int i,j;
+    // for (i = 0; i < size; i++) {
+    //     for (j = 0; j < size2; j++) {
+    //         if (a[i + j] != b[j]) {
+    //         break;
+    //         }
+    //     }
+    //     if (j == size2) {
+    //     return i;
+    //     }
+    // }
+    //     return -1;
 
     for (int i = 0; i < size; i++){
         if (a[i] == b[0]){
@@ -144,7 +144,7 @@ void grid_display(char *puzzle[], int len){ //function to display the puzzle in 
         for (int j = 0; j < size; j++){
             printf("%c\t", upper(puzzle[i][j]));
         }
-        printf("\n");
+        printf("\n\n");
     }
 }
 
@@ -163,14 +163,13 @@ Locations *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word)
     for (int j = 0; j < puzzle_len; j++){
         char *row = upper_string(puzzle[j]);
 
-        int i = inString_Brute(row, word);
+        int i = inString_Brute(row, word); //check if the word is in the row
         if (i >= 0){ //if the word is found in the row
 
             positions *pos = malloc(sizeof(positions)); //create a new position
 
             locations->index++; //increase the number of occurances
             locations = realloc(locations, sizeof(Locations) * locations->index); //increase the size of the array of positions
-
 
             pos->index = 0; //initialize the index of the position
             pos->coordinates = malloc(sizeof(coord)); //initialize the array of coordinates
@@ -185,12 +184,39 @@ Locations *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word)
                 printf("(%d, %d)", pos->coordinates->x, pos->coordinates->y);
             }
             printf("\n");
-            locations->positions[locations->index-1] = *pos; //add the position to the array of positions
-            // printf("\n\nCollected row-wise search:\n\n");
-            // print_positions(locations->positions, wordsize);
-
+            locations->positions[locations->index - 1] = *pos; //add the position to the array of positions
         }
+
+        char *reversed_word = reverse_string(word);
+        int l = inString_Brute(row, reversed_word) ;
+        
+        i = inString_Brute(row, word);
+        
+        if (l>= 0 && strcmp(word, reversed_word) != 0){ //if the word is found in the row
+
+            positions *pos = malloc(sizeof(positions)); //create a new position
+
+            locations->index++; //increase the number of occurances
+            locations = realloc(locations, sizeof(Locations) * locations->index); //increase the size of the array of positions
+
+            pos->index = 0; //initialize the index of the position
+            pos->coordinates = malloc(sizeof(coord)); //initialize the array of coordinates
+            for (int k = wordsize; k > 0; k--){ //add the coordinates of the word to the position
+                pos->coordinates->x = l + k - 1;//account for the offset
+                pos->coordinates->y = j;
+                pos->index++;
+
+                pos->coordinates = realloc(pos->coordinates, sizeof(coord) * pos->index); //increase the size of the array of coordinates
+                pos->coordinates[pos->index - 1] = *pos->coordinates; //add the coordinates to the array
+                printf("(%d, %d)", pos->coordinates->x, pos->coordinates->y);
+            }
+            printf("\n");
+            locations->positions[locations->index - 1] = *pos; //add the position to the array of positions
+        }
+        free (row);
+        
     }
+
 
     //column-wise search
     for (int j = 0; j < puzzle_len; j++){
@@ -223,13 +249,40 @@ Locations *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word)
             printf("\n");
             locations->positions[locations->index-1] = *pos; //add the position to the array of positions
             // printf("\n\nCollected column-wise search:\n\n");
-            // print_positions(locations->positions, wordsize);
+            // print_positions(locations->positions, wordsize);        
 
         }
+        char *reversed_word = reverse_string(word);
+        int l = inString_Brute(col, reversed_word) ;
+        
+        i = inString_Brute(col, word);
+        
+        if (l>= 0 && strcmp(word, reversed_word) != 0){ //if the word is found in the row
+
+            positions *pos = malloc(sizeof(positions)); //create a new position
+
+            locations->index++; //increase the number of occurances
+            locations = realloc(locations, sizeof(Locations) * locations->index); //increase the size of the array of positions
+
+            pos->index = 0; //initialize the index of the position
+            pos->coordinates = malloc(sizeof(coord)); //initialize the array of coordinates
+            for (int k = wordsize; k > 0; k--){ //add the coordinates of the word to the position
+                pos->coordinates->x = j;//
+                pos->coordinates->y = l + k - 1; //account for the offset
+                pos->index++;
+
+                pos->coordinates = realloc(pos->coordinates, sizeof(coord) * pos->index); //increase the size of the array of coordinates
+                pos->coordinates[pos->index - 1] = *pos->coordinates; //add the coordinates to the array
+                printf("(%d, %d)", pos->coordinates->x, pos->coordinates->y);
+            }
+            printf("\n");
+            locations->positions[locations->index - 1] = *pos; //add the position to the array of positions
+        }
+        free (col);
     }
 
     //diagnoal-wise search (top half of right to left diagonal)
-    for (int i = 0; i < puzzle_len; i++){
+    for (int i = 0; i < puzzle_len-1; i++){
         char *diag = malloc(sizeof(char) * puzzle_len);
         int pointer_y = i;
         int pointer_x = 0;
@@ -253,7 +306,7 @@ Locations *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word)
 
             for (int k = 0; k < wordsize; k++){ //add the coordinates of the word to the position
                 pos->coordinates->x = j + k;
-                pos->coordinates->y = i - j - k;
+                pos->coordinates->y = i - k;
                 pos->index++;
 
                 pos->coordinates = realloc(pos->coordinates, sizeof(coord) * pos->index); //increase the size of the array of coordinates
@@ -265,11 +318,12 @@ Locations *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word)
             // printf("\n\nCollected diagnoal-wise search (top half of right to left diagonal):\n\n");
             // print_positions(locations->positions, wordsize);
 
-        }
-        int l;
+        };
         char *reversed_word = reverse_string(word); //reverse the word
+        int l = inString_Brute(diag, reversed_word);
+
         j = inString_Brute(diag, word)+1; //add one to the index to account for the reversed word
-        if (l = inString_Brute(diag, reversed_word)>= 0 && strcmp(reversed_word, word) != 0){ //if the reversed word is found in the diagonal
+        if (l >= 0 && strcmp(reversed_word, word) != 0){ //if the reversed word is found in the diagonal
             positions *pos = malloc(sizeof(positions)); //create a new position
 
             locations->index++; //increase the number of occurances
@@ -278,9 +332,9 @@ Locations *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word)
             pos->index = 0; //initialize the index of the position
             pos->coordinates = malloc(sizeof(coord)); //initialize the array of coordinates
 
-            for (int k = 0; k < wordsize; k++){ //add the coordinates of the word to the position
-                pos->coordinates->x = j + k;
-                pos->coordinates->y = i - j - k;
+            for (int k = wordsize; k > 0; k--){ //add the coordinates of the word to the position
+                pos->coordinates->x = j + k - 1;
+                pos->coordinates->y = i - k + 1;
                 pos->index++;
 
                 pos->coordinates = realloc(pos->coordinates, sizeof(coord) * pos->index); //increase the size of the array of coordinates
@@ -407,10 +461,10 @@ Locations *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word)
             // print_positions(locations->positions, wordsize);
 
         }
-        int l;
         char *reversed_word = reverse_string(word); //reverse the word
-        j = inString_Brute(diag3, word)+1; //add one to the index to account for the reversed word
-        if (l = inString_Brute(diag3, reversed_word)>= 0 && strcmp(reversed_word, word) != 0){
+        int l =  inString_Brute(diag3, reversed_word);
+        j = inString_Brute(diag3, word); //add one to the index to account for the reversed word
+        if (l >= 0 && strcmp(reversed_word, word) != 0){
             positions *pos = malloc(sizeof(positions)); //create a new position
 
             locations->index++; //increase the number of occurances
@@ -420,8 +474,8 @@ Locations *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word)
             pos->coordinates = malloc(sizeof(coord)); //initialize the array of coordinates
 
             for (int k = wordsize; k > 0; k--){ //add the coordinates of the word to the position
-                pos->coordinates->x = k+j+i;
-                pos->coordinates->y = j+k;
+                pos->coordinates->x = k + j + l + i;
+                pos->coordinates->y = j + k + l;
                 pos->index++;
 
                 pos->coordinates = realloc(pos->coordinates, sizeof(coord) * pos->index); //increase the size of the array of coordinates
@@ -440,7 +494,7 @@ Locations *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word)
 
     //diagnoal-wise search (bottom half of left to right diagonal)
     
-    for (int i = 0; i < puzzle_len; i++){
+    for (int i = 1; i < puzzle_len; i++){
         char *diag4 = malloc(sizeof(char) * puzzle_len);
         int pointer_y = 0;
         int pointer_x = i;
@@ -478,10 +532,10 @@ Locations *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word)
             // print_positions(locations->positions, wordsize);
 
         }
-        int l;
         char *reversed_word = reverse_string(word); //reverse the word
-        j = inString_Brute(diag4, word)+1; //add one to the index to account for the reversed word
-        if (l = inString_Brute(diag4, reversed_word)>= 0 && strcmp(reversed_word, word) != 0){
+        int l = inString_Brute(diag4, reversed_word);
+        j = inString_Brute(diag4, word); //add one to the index to account for the reversed word
+        if (l >= 0 && strcmp(reversed_word, word) != 0){
             positions *pos = malloc(sizeof(positions)); //create a new position
 
             locations->index++; //increase the number of occurances
@@ -491,8 +545,8 @@ Locations *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word)
             pos->coordinates = malloc(sizeof(coord)); //initialize the array of coordinates
 
             for (int k = wordsize; k > 0; k--){ //add the coordinates of the word to the position
-                pos->coordinates->y = k+j+i+1;
-                pos->coordinates->x = j+k+1;
+                pos->coordinates->y = k + j + l + i;
+                pos->coordinates->x = j + k + l;
                 pos->index++;
 
                 pos->coordinates = realloc(pos->coordinates, sizeof(coord) * pos->index); //increase the size of the array of coordinates
@@ -513,81 +567,6 @@ Locations *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word)
 
 }
 
-
-void *coloured_grid(char *puzzle[], int puzzle_len, char *word, Locations *locations){
-    
-    char *coloured = malloc(sizeof(char) * puzzle_len);
-    coloured = *puzzle;
-    while(locations->index > 0){
-        char *current = malloc(sizeof(char) * 11);
-        for (int i = 0; i < locations->positions->index; i++){
-            sprintf(current, "%s", GREEN);
-            sprintf(current, "%c", puzzle[4][4]);
-            sprintf(current, "%s", RESET);
-            
-
-            //printf("(%d, %d)", locations->positions->coordinates->x, locations->positions->coordinates->y);
-        }
-        puzzle[locations->positions->coordinates->y] = current;
-        locations->positions++;
-        locations->index--;
-        printf("\n");
-    }
-    grid_display(&coloured, puzzle_len);
-}
-
-
-
-
-//     while(locations->index > 0){
-//         char *current = malloc(sizeof(char) * puzzle_len);
-//         for (int i = 0; i < locations->positions->index; i++){
-//             sprintf(current, "%s%c%s", GREEN, puzzle[locations->positions->coordinates->y][locations->positions->coordinates->x], RESET);
-
-//             //printf("(%d, %d)", locations->positions->coordinates->x, locations->positions->coordinates->y);
-//         }
-//         puzzle[locations->positions->coordinates->y] = current;
-//         locations->positions++;
-//         locations->index--;
-//     }
-// }
-
-
-    
-    // while (locations->index > 0){
-    //     char *current = malloc(sizeof(char) * puzzle_len);
-    //     for (int i = 0; i < locations->positions->index; i++){
-    //         sprintf(current, "%s%c%s", GREEN, puzzle[locations->positions->coordinates->y][locations->positions->coordinates->x], RESET);
-
-    //         //printf("(%d, %d)", locations->positions->coordinates->x, locations->positions->coordinates->y);
-    //     }
-    //     puzzle[locations->positions->coordinates->y] = current;
-    //     locations->positions++;
-    //     locations->index--;
-    // }
-    
-    
-    
-    
-    
-    
-    
-    // char modified_puzzle[puzzle_len][puzzle_len];
-
-    // for (int i = 0; i< puzzle_len; i++){
-    //     char current[puzzle_len];
-    //     strcpy(current, puzzle[i]);
-    //     for (int j = 0; j < strlen(current); j++){
-    //         if (locations->positions->coordinates->x == j && locations->positions->coordinates->y == i){
-    //             sprintf(current, "%s%c%s", GREEN, current[j], RESET);
-    //             printf("%s\n", current);
-    //             strcpy (modified_puzzle[i][j], current);
-
-    //         }
-    //     }
-    // }
-
-
 int main(){
     //initialize list of strings
     char *A[] = {"RUNAROUNDDL", "EDCITOAHCYV", "ZYUWSWEDZYA", "AKOTCONVOYV",
@@ -599,24 +578,20 @@ int main(){
     //printf("%d\n",valid_wordlist(A, len));
     
 
-    char *word[] = {"scalar", "tray", "blew", "sevruc"};
-    int wordsize = sizeof(word)/sizeof(word[0]);
+    // char *word[] = {"scalar", "tray", "blew", "sevruc"};
+    // int wordsize = sizeof(word)/sizeof(word[0]);
 
-    char trial[] = "scalar";
+    char *input = malloc(sizeof(char) * 100);
+    printf("Enter a word: ");
+    scanf("%s", input);
+    printf("\n");
 
-    Locations *locations = get_positions_brute_force(A, len,trial);
-
-    char *coloured = coloured_grid(A, len, trial, locations);
-    grid_display(&coloured,  len);
-
-
-    //positions *pos = get_positions_brute_force(A, len, "acCD").positions;
+    Locations *locations = get_positions_brute_force(A, len,input);
+    free(input);
+    free(locations->positions);
+    free(locations);
     
-    //locations = get_positions_brute_force(A, len, "blew");
-    print_locations(locations);
-    //print_locations(get_positions_brute_force(A, len, "ACCD"));
 
-    //printf("%s", upper_string("abcd"));
+
     return 0;
-}   
-hello
+}
