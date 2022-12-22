@@ -50,7 +50,13 @@ The grid looks like this:
 
                     T       E       Y       E       M       R       O       F       I       N       U
 ```
-
+Some sample inputs: 
+- Run
+- Scalar
+- Runaround
+- Curves
+- Tolerate
+- Tray
 
 ## Output
 Sample Output for the word 'Scalar':  
