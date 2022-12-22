@@ -27,11 +27,13 @@ int KMP(char *str, char *substring)
     int i = 0, j = 0;
     int textLen = strlen(str);
     int patLen = strlen(substring);
+    char* temp = substring;
     int T[patLen];
 
     // build the KMP table
-    buildKMPTable(T, substring);
+    buildKMPTable(T, temp);
 
+    substring = temp;
     // search for pattern in the text
     while (i < textLen)
     {
