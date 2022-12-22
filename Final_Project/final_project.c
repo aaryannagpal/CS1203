@@ -191,8 +191,8 @@ void *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word){
         if (l >= 0 && strcmp(reversed_word, word) != 0){ //if the reversed word is found in the diagonal
 
             for (int k = wordsize; k > 0; k--){ //add the coordinates of the word to the position
-                x = j + k;
-                y = i - k;
+                y = j + k + 1;
+                x = i - k + j - 1;
                 printf("(%d, %d)", x, y);
             }
             printf("\n");
@@ -429,8 +429,8 @@ void *get_positions_kmp(char *puzzle[], int puzzle_len, char *word){
         if (l >= 0 && strcmp(reversed_word, word) != 0){ //if the reversed word is found in the diagonal
 
             for (int k = wordsize; k > 0; k--){ //add the coordinates of the word to the position
-                x = j + k;
-                y = i - k;
+                y = j + k + 1;
+                x = i - k + j - 1;
                 printf("(%d, %d)", x, y);
             }
             printf("\n");
@@ -668,8 +668,8 @@ void *get_positions_RabinKarp(char *puzzle[], int puzzle_len, char *word){
         if (l >= 0 && strcmp(reversed_word, word) != 0){ //if the reversed word is found in the diagonal
 
             for (int k = wordsize; k > 0; k--){ //add the coordinates of the word to the position
-                x = j + k;
-                y = i - k;
+                y = j + k + 1;
+                x = i - k + j - 1;
                 printf("(%d, %d)", x, y);
             }
             printf("\n");
