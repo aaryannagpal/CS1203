@@ -11,19 +11,19 @@ return hash;
 }
 
 //Function to search for a given string in the main text using Rabin-Karp Algorithm
-void search(char* text, char* pattern)
+int RabinKarp(char* str, char* substring)
 {
-int textLen = strlen(text);
-int patLen = strlen(pattern);
+int textLen = strlen(str);
+int patLen = strlen(substring);
 
 //Calculate the hash value of the pattern
-int patHash = calculateHash(pattern, patLen);
+int patHash = calculateHash(substring, patLen);
 
 //Iterate through the main text and compare the hash values of the pattern and the substrings of the same length as the pattern
 for(int i=0; i<=textLen-patLen; i++)
 {
     //Calculate the hash value of the current substring of the main text
-    int subHash = calculateHash(text+i, patLen);
+    int subHash = calculateHash(str+i, patLen);
 
     //If the hash value matches, check for the exact string match
     if(subHash == patHash)
@@ -34,7 +34,7 @@ for(int i=0; i<=textLen-patLen; i++)
         //Check for exact string match
         for(int j=0; j<patLen; j++)
         {
-            if(text[i+j] != pattern[j])
+            if(str[i+j] != substring[j])
             {
                 match = 0;
                 break;
@@ -43,17 +43,18 @@ for(int i=0; i<=textLen-patLen; i++)
 
         //If exact match found, print the index of the starting position of the pattern in the main text
         if(match)
-            printf("Pattern found at index %d\n", i);
+            return i;
+        }
     }
-}
+return -1;
 }
 
-int main()
-{
-//Sample main text and pattern
-char text[] = "Hello World! This is a sample text for testing the Rabin-Karp Algorithm.";
-char pattern[] = "Rabin-Kar";
+// int main()
+// {
+// //Sample main text and pattern
+// char text[] = "Hello World! This is a sample text for testing the Rabin-Karp Algorithm.";
+// char pattern[] = "Rabin-Kar";
 
-search(text, pattern);
-return 0;
-}
+// printf("%d",RabinKarp(text, pattern));
+// return 0;
+// }

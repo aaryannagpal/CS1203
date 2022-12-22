@@ -22,20 +22,20 @@ void buildKMPTable(int *T, char *pattern)
 }
 
 // Function to search for a pattern in a given text using KMP algorithm
-void KMP(char *text, char *pattern)
+int KMP(char *str, char *substring)
 {
     int i = 0, j = 0;
-    int textLen = strlen(text);
-    int patLen = strlen(pattern);
+    int textLen = strlen(str);
+    int patLen = strlen(substring);
     int T[patLen];
 
     // build the KMP table
-    buildKMPTable(T, pattern);
+    buildKMPTable(T, substring);
 
     // search for pattern in the text
     while (i < textLen)
     {
-        while (j >= 0 && text[i] != pattern[j])
+        while (j >= 0 && str[i] != substring[j])
         {
             j = T[j];
         }
@@ -45,18 +45,16 @@ void KMP(char *text, char *pattern)
 
         if (j == patLen)
         {
-            printf("Found pattern at index %d\n", i - j);
+            int k = i - j;
             j = T[j];
+            return k;
         }
     }
+    return -1;
 }
-
-// main function
-int main()
-{
-    char text[] = "AARYAN IS AARYAN";
-    char pattern[] = "AARYAN";
-    KMP(text, pattern);
-    
-    return 0;
-}
+// int main(){
+//     char text[] = "Hello World! This is a sample text for testing the Rabin-Karp Algorithm.";
+//     char pattern[] = "Rabin-Kar";
+//     printf("%d",KMP(text, pattern));
+//     return 0;
+// }
