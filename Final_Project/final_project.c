@@ -9,14 +9,12 @@
 
 char *reverse_string(char a[]){
     int size = strlen(a);
-    char *b = malloc(sizeof(char) * (size + 1));
+    char *b = malloc(sizeof(char) * size);
     for (int i = 0; i < size; i++){
         b[i] = a[size - i - 1];
     }
-    b[size] = '\0';  // add null character at the end
     return b;
 }
-
 
 int upper(char c){
     if (c >= 'a' && c <= 'z'){
@@ -28,14 +26,14 @@ int upper(char c){
 // make all the letters in a string uppercase
 char *upper_string(char a[]){
     int len = strlen(a);
-    char *b = malloc(sizeof(char) * (len + 1));
+    char *b = malloc(sizeof(char) * len);
 
     for (int i = 0; i < len; i++){
         b[i] = upper(a[i]);
     }
-    b[len] = '\0';  // add null character at the end
+    //return only till the length of the string
     return b;
-}
+}       
 
 int inString_Brute(char *a, char *b){
     int size = strlen(a);
@@ -59,7 +57,7 @@ int inString_Brute(char *a, char *b){
 }
 
 
-void grid_display(char *puzzle[], int len){
+void grid_display(char *puzzle[], int len){ //function to display the puzzle in a grid
     int size = strlen(puzzle[0]);
     for (int i = 0; i < len; i++){
         for (int j = 0; j < size; j++){
@@ -71,18 +69,17 @@ void grid_display(char *puzzle[], int len){
 
 
 
-double measure_time(void (*func)()) {
+double measure_time(void (*func)) {
   clock_t start, end;
   double elapsed;
 
   start = clock();
-  func();
+  
   end = clock();
 
-  elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+  elapsed = (double)(end - start) / CLOCKS_PER_SEC;
   return elapsed;
 }
-
 
 
 void *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word){
@@ -164,6 +161,10 @@ void *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word){
     }
 
     //diagnoal-wise search (top half of right to left diagonal)
+
+    //======BUGGY REGION=========
+
+    //========SOMETIMES RETURNS SOMETIMES DOES NOT================
     for (int i = 0; i < puzzle_len-1; i++){
         char *diag = malloc(sizeof(char) * puzzle_len);
         int pointer_y = i;
@@ -174,11 +175,10 @@ void *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word){
             pointer_y--;
             pointer_x++;
         }
+        diag = reverse_string(diag); //something wrong here
 
-        diag = reverse_string(diag);
-
-        diag = upper_string(diag);
-        int j = inString_Brute(diag, word);
+        diag = upper_string(diag); // or here
+        int j = inString_Brute(diag, word); // that is causing no results here
         if (j >= 0){
             for (int k = 0; k < wordsize; k++){ //add the coordinates of the word to the position
                 y = j + k;
@@ -186,6 +186,7 @@ void *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word){
                 printf("(%d, %d)", x, y);
             }
             printf("\n");
+            printf("%s\n", diag);
         };
         char *reversed_word = reverse_string(word); //reverse the word
         int l = inString_Brute(diag, reversed_word);
@@ -416,7 +417,6 @@ void *get_positions_kmp(char *puzzle[], int puzzle_len, char *word){
         diag = reverse_string(diag);
 
         diag = upper_string(diag);
-        
         int j = KMP(diag, word);
         if (j >= 0){
             for (int k = 0; k < wordsize; k++){ //add the coordinates of the word to the position
