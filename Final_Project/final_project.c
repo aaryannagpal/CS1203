@@ -416,7 +416,7 @@ void *get_positions_kmp(char *puzzle[], int puzzle_len, char *word){
         diag = reverse_string(diag);
 
         diag = upper_string(diag);
-        printf("Working so far\n");
+        
         int j = KMP(diag, word);
         if (j >= 0){
             for (int k = 0; k < wordsize; k++){ //add the coordinates of the word to the position
