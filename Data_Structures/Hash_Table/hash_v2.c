@@ -134,7 +134,7 @@ int main() {
     if (value) {
         printf("Key: banana, Value: %s\n", value);
     } else {
-        printf("Key not found\n");
+        printf("\nKey not found\n");
     }
 
     return 0;
