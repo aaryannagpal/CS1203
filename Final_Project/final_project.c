@@ -9,12 +9,14 @@
 
 char *reverse_string(char a[]){
     int size = strlen(a);
-    char *b = malloc(sizeof(char) * size);
+    char *b = malloc(sizeof(char) * (size + 1));
     for (int i = 0; i < size; i++){
         b[i] = a[size - i - 1];
     }
+    b[size] = '\0';  // add null character at the end
     return b;
 }
+
 
 int upper(char c){
     if (c >= 'a' && c <= 'z'){
@@ -26,14 +28,14 @@ int upper(char c){
 // make all the letters in a string uppercase
 char *upper_string(char a[]){
     int len = strlen(a);
-    char *b = malloc(sizeof(char) * len);
+    char *b = malloc(sizeof(char) * (len + 1));
 
     for (int i = 0; i < len; i++){
         b[i] = upper(a[i]);
     }
-    //return only till the length of the string
+    b[len] = '\0';  // add null character at the end
     return b;
-}       
+}
 
 int inString_Brute(char *a, char *b){
     int size = strlen(a);
@@ -57,7 +59,7 @@ int inString_Brute(char *a, char *b){
 }
 
 
-void grid_display(char *puzzle[], int len){ //function to display the puzzle in a grid
+void grid_display(char *puzzle[], int len){
     int size = strlen(puzzle[0]);
     for (int i = 0; i < len; i++){
         for (int j = 0; j < size; j++){
@@ -69,17 +71,18 @@ void grid_display(char *puzzle[], int len){ //function to display the puzzle in 
 
 
 
-double measure_time(void (*func)) {
+double measure_time(void (*func)()) {
   clock_t start, end;
   double elapsed;
 
   start = clock();
-  
+  func();
   end = clock();
 
-  elapsed = (double)(end - start) / CLOCKS_PER_SEC;
+  elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
   return elapsed;
 }
+
 
 
 void *get_positions_brute_force(char *puzzle[], int puzzle_len, char *word){
@@ -413,6 +416,7 @@ void *get_positions_kmp(char *puzzle[], int puzzle_len, char *word){
         diag = reverse_string(diag);
 
         diag = upper_string(diag);
+        printf("Working so far\n");
         int j = KMP(diag, word);
         if (j >= 0){
             for (int k = 0; k < wordsize; k++){ //add the coordinates of the word to the position
@@ -842,17 +846,20 @@ void Ready_Game(){
 
 int main(){
     printf("Welcome to Word Search!\n");
-    printf("Press 1 to play the game and 0 to exit!:");
-    int choice;
-    scanf("%d", &choice);
-    if (choice == 1){
-        Ready_Game();
-    }
-    else if (choice == 0){
-        printf("Thank you. Goodbye!\n");
-    }
-    else{
-        printf("Invalid choice!\n");
+    while(1){
+        printf("Press 1 to play the game and 0 to exit!:");
+        int choice;
+        scanf("%d", &choice);
+        if (choice == 1){
+            Ready_Game();
+        }
+        else if (choice == 0){
+            printf("Thank you. Goodbye!\n");
+            break;
+        }
+        else{
+            printf("Invalid choice!\n");
+        }
     }
 
     return 0;
